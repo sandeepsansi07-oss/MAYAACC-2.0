@@ -1,0 +1,68 @@
+{
+  "author": "MAYAACC",
+  "build": {
+    "appId": "com.mayaacc.app",
+    "copyright": "Copyright \u00a9 MAYAACC",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "package.json",
+      "scripts/**/*"
+    ],
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "MAYAACC-Setup-${version}.exe",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "oneClick": false,
+      "perMachine": false,
+      "shortcutName": "MAYAACC"
+    },
+    "portable": {
+      "artifactName": "MAYAACC-${version}-Portable.exe"
+    },
+    "productName": "MAYAACC",
+    "win": {
+      "sign": "./scripts/no-sign.js",
+      "target": [
+        {
+          "arch": [
+            "x64"
+          ],
+          "target": "nsis"
+        },
+        {
+          "arch": [
+            "x64"
+          ],
+          "target": "portable"
+        }
+      ]
+    }
+  },
+  "description": "MAYAACC \u2014 Smart Accounting Software for Indian Businesses. PC-only (Windows) desktop app, Tally-style keyboard-first accounting. Fresh theme + dashboard, all features from the original single-file HTML preserved.",
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "license": "MIT",
+  "main": "main.js",
+  "name": "mayaacc",
+  "private": true,
+  "scripts": {
+    "dist": "electron-builder --win nsis --x64",
+    "dist:all": "electron-builder --win nsis portable --x64",
+    "dist:dir": "electron-builder --win --x64 --dir",
+    "dist:installer": "electron-builder --win nsis --x64",
+    "dist:portable": "electron-builder --win portable --x64",
+    "pack": "electron-builder --win portable --x64",
+    "start": "electron .",
+    "test": "node test/smoke-test.js"
+  },
+  "version": "2.0.0"
+}
