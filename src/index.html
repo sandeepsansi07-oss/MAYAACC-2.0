@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAYAACC — Smart Accounting for Indian Businesses</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <aside class="sidebar">
+    <div class="brand"><h1>MAYA<span>ACC</span></h1><p>Smart Accounting • Indian Businesses • PC</p></div>
+    <div class="company-box">
+      <div class="lbl">Current Company</div>
+      <div class="name" id="sbCompany">—</div>
+      <div class="sub" id="sbCompanySub">—</div>
+      <div style="margin-top:8px"><button class="btn" style="padding:4px 10px;font-size:12px" data-nav="masters" data-sub="company">Change Company</button></div>
+    </div>
+    <nav class="nav" id="mainNav">
+      <h3>Home</h3>
+      <button data-nav="dashboard" class="active">🏠 Dashboard <span class="k">Esc</span></button>
+      <button data-nav="gateway">🧭 Gateway of Tally <span class="k">F1</span></button>
+      <h3>Transactions</h3>
+      <button data-nav="vouchers">🧾 Vouchers <span class="k">Alt+N</span></button>
+      <button data-nav="vouchers" data-sub="Sales">Sales <span class="k">F8</span></button>
+      <button data-nav="vouchers" data-sub="Purchase">Purchase <span class="k">F9</span></button>
+      <button data-nav="vouchers" data-sub="Payment">Payment <span class="k">F5</span></button>
+      <button data-nav="vouchers" data-sub="Receipt">Receipt <span class="k">F6</span></button>
+      <h3>Books &amp; Reports</h3>
+      <button data-nav="reports">📊 Reports</button>
+      <button data-nav="reports" data-sub="daybook">Day Book</button>
+      <button data-nav="reports" data-sub="trial">Trial Balance</button>
+      <button data-nav="reports" data-sub="pl">Profit &amp; Loss</button>
+      <button data-nav="reports" data-sub="bs">Balance Sheet</button>
+      <h3>Masters &amp; Stock</h3>
+      <button data-nav="masters">🗂️ Masters</button>
+      <button data-nav="inventory">📦 Inventory / Stock</button>
+      <button data-nav="gst">🧮 GST</button>
+      <button data-nav="payroll">👥 Payroll</button>
+      <button data-nav="einvoice">🧾 e-Invoice</button>
+      <h3>System</h3>
+      <button data-nav="data">💾 Backup / Data</button>
+      <button data-nav="help">⌨️ Shortcuts &amp; Help</button>
+    </nav>
+    <div class="sidebar-foot">MAYAACC 2.0 • PC only • Offline<br>Data: Documents\MAYAACC-Data</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h2 id="viewTitle">Dashboard</h2><span class="crumb" id="viewCrumb">Overview</span>
+      <div class="spacer"></div>
+      <span class="pill" id="topDate">—</span>
+      <span class="pill" id="topCompany">—</span>
+      <button class="btn primary" id="btnQuickSale">+ New Sale</button>
+    </header>
+    <div class="content" id="content">
+
+      <!-- DASHBOARD -->
+      <section class="view active" id="view-dashboard">
+        <div class="grid kpi" id="kpiGrid"></div>
+        <div class="grid two">
+          <div class="card"><h3>⚡ Quick Actions</h3><div class="btnrow" id="quickActions"></div>
+            <p class="muted small">Tally-style: keyboard first. <kbd>F8</kbd> Sale, <kbd>F9</kbd> Purchase, <kbd>F5</kbd> Payment, <kbd>F6</kbd> Receipt, <kbd>Ctrl+S</kbd> Save, <kbd>Esc</kbd> Dashboard.</p>
+          </div>
+          <div class="card"><h3>⚠️ Low Stock Alerts</h3><div id="lowStockBox"><p class="muted">No low-stock items.</p></div></div>
+        </div>
+        <div class="grid two">
+          <div class="card"><h3>🧾 Recent Vouchers</h3><div id="recentBox"></div></div>
+          <div class="card"><h3>💰 Money In / Out (all vouchers)</h3><div id="moneyBox"></div></div>
+        </div>
+      </section>
+
+      <!-- GATEWAY -->
+      <section class="view" id="view-gateway">
+        <div class="card"><h3>Gateway of Tally — use ↑ ↓ + Enter (keyboard-first)</h3>
+          <p class="muted small">Arrow keys to move, Enter to open, Esc for Dashboard.</p>
+          <div class="gateway-list" id="gatewayList" tabindex="0"></div>
+        </div>
+      </section>
+
+      <!-- MASTERS -->
+      <section class="view" id="view-masters">
+        <div class="card"><h3>Companies</h3><div id="companyList"></div>
+          <div class="form-grid" style="margin-top:12px">
+            <div><label>New Company Name</label><input type="text" id="newCoName" placeholder="e.g. Sharma Traders"></div>
+            <div><label>State</label><input type="text" id="newCoState" placeholder="Delhi"></div>
+            <div><label>GSTIN (optional)</label><input type="text" id="newCoGstin" placeholder="07AAAAA0000A1Z5"></div>
+          </div>
+          <div class="btnrow"><button class="btn primary" id="btnAddCompany">Create Company</button></div>
+        </div>
+        <div class="card"><h3>Masters — <span id="masterKind">Ledger</span></h3>
+          <div class="btnrow" id="masterTabs"></div>
+          <div class="form-grid">
+            <div><label>Name</label><input type="text" id="masterName" placeholder="Ledger / Item / Group name"></div>
+            <div><label>Group / Parent</label><input type="text" id="masterGroup" placeholder="e.g. Sundry Debtors"></div>
+            <div><label>Opening / Rate / Qty</label><input type="number" id="masterValue" placeholder="0" step="0.01"></div>
+          </div>
+          <div class="btnrow"><button class="btn primary" id="btnAddMaster">Add Master</button>
+          <span class="muted small">Create / Alter — same as Tally masters. Ledger, Group, Stock Item, Stock Group, Godown, Unit, Cost Centre, Voucher Type.</span></div>
+          <div id="masterList"></div>
+        </div>
+      </section>
+
+      <!-- VOUCHERS -->
+      <section class="view" id="view-vouchers">
+        <div class="card"><h3>New Voucher — <span id="vchTypeLabel">Sales</span></h3>
+          <div class="btnrow" id="vchTypeTabs"></div>
+          <div class="form-grid">
+            <div><label>Date</label><input type="date" id="vchDate"></div>
+            <div><label>Party / Ledger</label><input type="text" id="vchParty" list="ledgerDatalist" placeholder="Type ledger name — e.g. Cash"></div>
+            <div><label>Cash / Bank (for Payment / Receipt / Contra)</label><input type="text" id="vchCashBank" list="ledgerDatalist" value="Cash"></div>
+            <div><label>Amount (₹)</label><input type="number" id="vchAmount" placeholder="0.00" step="0.01"></div>
+            <div><label>GST Rate %</label><select id="vchGstRate"><option value="0">0% (Nil / Non-GST)</option><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></div>
+            <div><label>Inter-State? (IGST)</label><select id="vchInter"><option value="no">No — CGST + SGST</option><option value="yes">Yes — IGST</option></select></div>
+            <div class="full"><label>Narration</label><input type="text" id="vchNarration" placeholder="Being goods sold..."></div>
+          </div>
+          <div class="btnrow"><button class="btn primary" id="btnSaveVoucher">Save Voucher (Ctrl+S)</button>
+          <span class="muted small" id="vchPreview"></span></div>
+          <div id="vchMsg"></div>
+          <datalist id="ledgerDatalist"></datalist>
+        </div>
+        <div class="card"><h3>All Vouchers</h3><div id="voucherList"></div></div>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="view" id="view-reports">
+        <div class="card"><h3>Reports</h3><div class="btnrow" id="reportTabs"></div>
+          <div class="form-grid"><div><label>From</label><input type="date" id="repFrom"></div><div><label>To</label><input type="date" id="repTo"></div>
+          <div><label>&nbsp;</label><button class="btn" id="btnRunReport">Run Report</button> <button class="btn" id="btnPrintReport">Print</button> <button class="btn" id="btnExportReport">Export CSV</button></div></div>
+        </div>
+        <div class="card"><div id="reportOut"><p class="muted">Choose a report above.</p></div></div>
+      </section>
+
+      <!-- INVENTORY -->
+      <section class="view" id="view-inventory">
+        <div class="card"><h3>Inventory — Stock Summary</h3><div id="stockBox"></div></div>
+        <div class="card"><h3>Add Stock Item</h3>
+          <div class="form-grid">
+            <div><label>Item Name</label><input type="text" id="stkName" placeholder="e.g. Rice 25kg"></div>
+            <div><label>Unit</label><input type="text" id="stkUnit" value="Nos"></div>
+            <div><label>Rate (₹)</label><input type="number" id="stkRate" step="0.01" placeholder="0"></div>
+            <div><label>Opening Qty</label><input type="number" id="stkQty" step="0.01" placeholder="0"></div>
+            <div><label>Reorder Level</label><input type="number" id="stkReorder" step="0.01" placeholder="0"></div>
+            <div><label>Godown</label><input type="text" id="stkGodown" value="Main Godown"></div>
+            <div><label>HSN / SAC</label><input type="text" id="stkHsn" placeholder="e.g. 1006"></div>
+          </div>
+          <div class="btnrow"><button class="btn primary" id="btnAddStock">Add Stock Item</button></div>
+        </div>
+        <div class="card"><h3>Bill of Material (BOM) — basic</h3><p class="muted small">A finished item made from raw items. Example: 1x Table = 4x Wood + 8x Screw.</p>
+          <div class="form-grid"><div><label>Finished Item</label><input type="text" id="bomFinished" placeholder="Finished item name"></div>
+          <div><label>Component</label><input type="text" id="bomComponent" placeholder="Raw item name"></div>
+          <div><label>Qty per unit</label><input type="number" id="bomQty" step="0.01" placeholder="1"></div></div>
+          <div class="btnrow"><button class="btn primary" id="btnAddBom">Add BOM Line</button></div><div id="bomList"></div>
+        </div>
+      </section>
+
+      <!-- GST -->
+      <section class="view" id="view-gst">
+        <div class="card"><h3>GST Summary — calculation &amp; reports only (NOT GST filing)</h3><div id="gstBox"></div>
+          <p class="muted small">GSTIN on file is shown for records only. This app does not file GSTR returns — use the GST portal for filing.</p></div>
+        <div class="card"><h3>HSN / SAC Finder</h3>
+          <div class="form-grid"><div><label>Search item / HSN</label><input type="text" id="hsnQuery" placeholder="e.g. Rice, 1006, Services"></div>
+          <div><label>&nbsp;</label><button class="btn" id="btnHsn">Search HSN</button></div></div>
+          <div id="hsnOut" style="margin-top:10px"></div></div>
+      </section>
+
+      <!-- PAYROLL -->
+      <section class="view" id="view-payroll">
+        <div class="card"><h3>Payroll — basic</h3>
+          <div class="form-grid"><div><label>Employee Name</label><input type="text" id="empName" placeholder="e.g. Ramesh Kumar"></div>
+          <div><label>Monthly Salary (₹)</label><input type="number" id="empSalary" step="0.01" placeholder="0"></div>
+          <div><label>Designation</label><input type="text" id="empRole" placeholder="Accountant"></div></div>
+          <div class="btnrow"><button class="btn primary" id="btnAddEmp">Add Employee</button> <button class="btn" id="btnPayrollRun">Run This Month's Payroll</button></div>
+          <div id="payrollBox"></div></div>
+      </section>
+
+      <!-- E-INVOICE -->
+      <section class="view" id="view-einvoice">
+        <div class="card"><h3>e-Invoice — record &amp; print (IRN placeholder)</h3>
+          <p class="muted small">Generates a printable invoice from a Sales voucher with a local reference number. This is NOT a live IRP / GSTN e-invoice — no real IRN is issued here.</p>
+          <div class="form-grid"><div><label>Sales Voucher No.</label><input type="number" id="einvNo" placeholder="1"></div>
+          <div><label>&nbsp;</label><button class="btn primary" id="btnEinv">Generate e-Invoice Preview</button></div></div>
+          <div id="einvOut" style="margin-top:10px"></div></div>
+      </section>
+
+      <!-- DATA -->
+      <section class="view" id="view-data">
+        <div class="card"><h3>💾 Backup / Restore / Import / Export</h3>
+          <p class="muted">Data file: <code id="dataPathLabel">—</code></p>
+          <div class="btnrow">
+            <button class="btn primary" id="btnBackup">Backup Now</button>
+            <button class="btn" id="btnChooseBackupFolder">Set Backup Folder (pen drive / Google Drive)</button>
+            <button class="btn" id="btnExportJson">Export JSON</button>
+            <button class="btn" id="btnExportCsv">Export Vouchers CSV (Excel)</button>
+            <button class="btn" id="btnPrint">Print</button>
+          </div>
+          <div class="form-grid"><div class="full"><label>Restore — paste a MAYAACC JSON backup, then click Restore</label><textarea id="restoreText" rows="4" placeholder="Paste JSON here..."></textarea></div></div>
+          <div class="btnrow"><button class="btn danger" id="btnRestore">Restore from Pasted JSON</button></div>
+          <div id="dataMsg"></div>
+          <p class="muted small">Backup folder: <span id="backupFolderLabel">not set — defaults to the data folder</span></p>
+        </div>
+      </section>
+
+      <!-- HELP -->
+      <section class="view" id="view-help">
+        <div class="card"><h3>⌨️ Keyboard Shortcuts (Tally-style)</h3>
+          <table><tr><th>Key</th><th>Action</th></tr>
+          <tr><td><kbd>F1</kbd></td><td>Gateway / Help</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Back to Dashboard</td></tr>
+          <tr><td><kbd>Alt+N</kbd></td><td>New Voucher</td></tr>
+          <tr><td><kbd>F8</kbd> / <kbd>F9</kbd></td><td>Sales / Purchase voucher</td></tr>
+          <tr><td><kbd>F5</kbd> / <kbd>F6</kbd></td><td>Payment / Receipt voucher</td></tr>
+          <tr><td><kbd>Ctrl+S</kbd></td><td>Save current voucher</td></tr>
+          <tr><td><kbd>Ctrl+P</kbd></td><td>Print current report</td></tr>
+          <tr><td>↑ ↓ + Enter</td><td>Move in Gateway list, open</td></tr></table>
+          <p class="muted small" style="margin-top:10px">PC only. No voice entry. Offline. Data stays on this PC.</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
