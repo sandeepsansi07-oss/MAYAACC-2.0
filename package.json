@@ -2,7 +2,7 @@
   "author": "MAYAACC",
   "build": {
     "appId": "com.mayaacc.app",
-    "copyright": "Copyright \u00a9 MAYAACC",
+    "copyright": "Copyright © MAYAACC",
     "directories": {
       "output": "dist"
     },
@@ -45,7 +45,7 @@
       ]
     }
   },
-  "description": "MAYAACC \u2014 Smart Accounting Software for Indian Businesses. PC-only (Windows) desktop app, Tally-style keyboard-first accounting. Fresh theme + dashboard, all features from the original single-file HTML preserved.",
+  "description": "MAYAACC — Smart Accounting Software for Indian Businesses. PC-only (Windows) desktop app, Tally-style keyboard-first accounting. Fresh theme + dashboard, all features from the original single-file HTML preserved.",
   "devDependencies": {
     "electron": "^30.0.0",
     "electron-builder": "^24.13.3"
@@ -55,10 +55,10 @@
   "name": "mayaacc",
   "private": true,
   "scripts": {
-    "dist": "electron-builder --win nsis --x64",
-    "dist:all": "electron-builder --win nsis portable --x64",
+    "dist": "electron-builder --win nsis --x64 --publish never",
+    "dist:all": "electron-builder --win nsis portable --x64 --publish never",
     "dist:dir": "electron-builder --win --x64 --dir",
-    "dist:installer": "electron-builder --win nsis --x64",
+    "dist:installer": "electron-builder --win nsis --x64 --publish never",
     "dist:portable": "electron-builder --win portable --x64",
     "pack": "electron-builder --win portable --x64",
     "start": "electron .",
